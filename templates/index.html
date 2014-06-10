@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <div class="row">
+            <h1>{{ APP_NAME }}</h1>
+            <h3>{{ APP_TAGLINE }}</h3>
+            <h4>Dibbs for war week of {{ monday }}</h4>
+        </div>
+
+        <div class="row">
+        <p>Welcome, {{ g.user.name }} - <a href="{{ url_for('logout') }}">Logout</a></p>
+        </div>
+        {% if not g.user.coc_handle %}
+            <div class="row" id="coc-handle-row">
+                <p>We need to know who you are! Please set your CoC handle:</p>
+                <div class="error-message">&nbsp;</div>
+                <form role="form" id="coc-handle-form">
+                  <div class="form-group">
+                    <label for="coc-handle">CoC Handle</label>
+                    <input type="coc_handle" class="form-control" id="coc-handle" name="coc_handle" placeholder="Enter CoC Handle">
+                  </div>
+                  <button type="submit" id="coc-handle-submit" class="btn btn-default">Set Handle</button>
+                </form>
+            </div>
+        {% endif %}
+
+        <div class="row">
+            <div id="war-bases" {% if g.user.coc_handle %}style="display: block;"{% endif %}>
+                <table class="table table-condensed">
+                    <tr>
+                        <td>Base Number</td>
+                        <td>Dibbed by</td>
+                        <td>Action(s)</td>
+                    </tr>
+                    {% for base in war_bases %}
+                        <tr>
+                            <td>{{ base.id }}</td>
+                            {% if base.dibbs.select()[0] %}
+                                <td class="dibbed" id="dibb-{{ base.id }}">{{ base.dibbs.select()[0].user.coc_handle }}</td>
+                                {% if base.dibbs.select()[0].user != g.user %}
+                                    <td>Already dibbed</td>
+                                {% else %}
+                                    <td><a href="#" data-id="{{ base.id }}" class="undibb">undibb</a></td>
+                                {% endif %}
+                            {% else %}
+                                <td class="undibbed" id="dibb-{{ base.id }}">Available</td>
+                                <td><a href="#" data-id="{{ base.id }}" class="dibb">dibb</a></td>
+                            {% endif %}
+                            
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+{% endblock %}
+
+{% block bottom_scripts %}
+<script type="text/javascript">
+    var error_modal = $('#error-modal');
+
+    var show_error = function(msg) {
+        error_modal.find('div.modal-body').each(function(e) {
+            $(this).html(msg);
+        });
+        error_modal.modal({});
+    }
+
+    var set_handle = function() {
+        var warbases_el = $('div#war-bases');
+        var handle_row = $('div#coc-handle-row');
+
+        var form_data = $('form#coc-handle-form').serializeArray();
+        var handle = form_data[0].value;
+
+        if (!handle) {
+            show_error('Please enter a CoC handle, it can\'t be blank');
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('set_handle') }}",
+                data: {'handle': handle}
+            }).then(function(data) {
+                handle_row.hide();
+                warbases_el.show();
+            }, function(data) {
+                var d = data.responseJSON;
+                show_error(d.result);            
+            });    
+        }
+
+        return false;
+    };
+
+    var dibb = function() {
+        var id = $(this).attr('data-id');
+        var claim_el = $('td#dibb-' + id);
+        var dibb_link = claim_el.next().find('a');
+
+        $.ajax({
+            type: 'POST',
+            url: "{{ url_for('dibb_base') }}",
+            data: {'id': id}
+        }).then(function(data) {
+            claim_el.removeClass('undibbed');
+            claim_el.addClass('dibbed');
+            claim_el.html(data.handle);
+            dibb_link.removeClass('dibb');
+            dibb_link.addClass('undibb');
+            dibb_link.html('undibb');
+        }, function(data) {
+            if (data.status == 500) {
+                show_error('A serious error happened. Contact glenbot.');
+                return false;
+            }
+            var d = data.responseJSON;
+            show_error(d.result);     
+        });
+
+        return false;
+    }
+
+    var undibb = function() {
+        var id = $(this).attr('data-id');
+        var claim_el = $('td#dibb-' + id);
+        var dibb_link = claim_el.next().find('a');
+
+        $.ajax({
+            type: 'POST',
+            url: "{{ url_for('undibb_base') }}",
+            data: {'id': id}
+        }).then(function(data) {
+            claim_el.removeClass('dibbed');
+            claim_el.addClass('undibbed');
+            claim_el.html(data.handle);
+            dibb_link.removeClass('undibb');
+            dibb_link.addClass('dibb');
+            dibb_link.html('dibb');
+        }, function(data) {
+            if (data.status == 500) {
+                show_error('A serious error happened. Contact glenbot.');
+                return false;
+            }
+            var d = data.responseJSON;
+            show_error(d.result);     
+        });
+
+        return false;
+    }
+
+    $('button#coc-handle-submit').click(set_handle);
+    $('button#coc-handle-submit').keypress(function(event) {
+        if (event.which == 13) {
+            set_handle();
+        }
+    });
+
+    $('a.dibb').click(dibb);
+    $('a.undibb').click(undibb);
+
+</script>
+{% endblock %}

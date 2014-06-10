@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{{ APP_NAME }} - {{ APP_TAGLINE }}</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='app/styles.css') }}">
+</head>
+
+<body>
+    <div class="container-fluid">
+        {% block content %}{% endblock %}
+    </div>
+
+    <div id="error-modal" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">&nbsp;</div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</body>
+<script type="text/javascript" src="{{ url_for('static', filename='jquery/jquery-2.1.1.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+{% block bottom_scripts %}{% endblock %}
+</html>

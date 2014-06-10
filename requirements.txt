@@ -1,0 +1,5 @@
+Flask==0.10.1
+Flask-OAuth==0.12
+Flask-Script==2.0.5
+peewee==2.2.4
+flask-peewee==0.6.5

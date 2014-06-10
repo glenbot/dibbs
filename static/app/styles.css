@@ -1,0 +1,60 @@
+@font-face {
+  font-family: 'CCBackBeat';
+  src: url('/static/fonts/CCBackBeat-Light_5.ttf');
+}
+
+@font-face {
+  font-family: 'Supercell';
+  src: url('/static/fonts/Supercell-Magic_5.ttf');
+}
+
+body {
+    background-color: #191919;
+    color: #FFF;
+    font-family: "Ubuntu", sans-serif;
+    padding: 30px;
+}
+
+h1 {
+    font-family: 'Supercell';
+    color: #FFF;
+}
+
+h3 {
+    font-family: 'CCBackBeat';
+    color: #FFFEAD;
+}
+
+#login-button {
+    margin-top: 50px;
+}
+
+#war-bases {
+  display: none;
+}
+
+#war-bases table tr td {
+  border: 1px solid #000;
+  box-shadow: inset 1px 0 0 #272727;
+}
+
+#error-modal {
+  display: none;
+}
+
+#error-modal div.modal-body {
+  color: red;
+}
+
+.dibbed {
+  color: #FFFEAD;
+}
+
+.undibbed {
+ font-style: italic;
+}
+
+.error-message {
+  display: none;
+  color: red;
+}

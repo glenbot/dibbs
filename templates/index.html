@@ -34,7 +34,7 @@
                     </tr>
                     {% for base in war_bases %}
                         <tr>
-                            <td>{{ base.id }}</td>
+                            <td>{{ loop.index }}</td>
                             {% if base.dibbs.select()[0] %}
                                 <td class="dibbed" id="dibb-{{ base.id }}">{{ base.dibbs.select()[0].user.coc_handle }}</td>
                                 {% if base.dibbs.select()[0].user != g.user %}

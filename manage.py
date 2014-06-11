@@ -34,6 +34,11 @@ def create_bases():
 
 
 @manager.command
+def recycle_dibbs():
+    Dibb.delete().execute()
+
+
+@manager.command
 def runserver():
     """Runs the Flask development server i.e. app.run()"""
     from main import run

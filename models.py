@@ -13,9 +13,10 @@ from app import db
 
 
 class User(db.Model):
-    fb_id = CharField(max_length=100)
-    name = CharField(max_length=75)
-    email = CharField(max_length=75)
+    fb_id = CharField(max_length=100, null=True)
+    name = CharField(max_length=75, null=True)
+    username = CharField(max_length=75, null=True)
+    password = CharField(max_length=64, null=True)
     coc_handle = CharField(max_length=75, null=True)
 
     def __unicode__(self):

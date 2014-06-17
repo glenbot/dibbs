@@ -11,6 +11,9 @@
 
 <body>
     <div class="container-fluid">
+        <div class="row">
+          {% include "_messages.html" %}
+        </div>
         {% block content %}{% endblock %}
     </div>
 

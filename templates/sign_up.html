@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row">
+        <h3>{{ APP_NAME }}</h3>
+    </div>
+
+    <div class="row">
+        <p class="login-text">Fill out the form to sign up:</p>
+        <div class="error-message">&nbsp;</div>
+        <form role="form" action="{{ url_for('sign_up') }}" method="POST">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Username" maxlength="75" value="{{ username }}">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password" maxlength="30">
+          </div>
+          <input type="hidden" name="xhp" value="" />
+          <button type="submit" class="btn btn-default">Sign Up</button>
+        </form>
+    </div>
+{% endblock %}

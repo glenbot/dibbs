@@ -26,7 +26,7 @@ h3 {
 }
 
 #login-button {
-    margin-top: 50px;
+    margin-top: 15px;
 }
 
 #war-bases {
@@ -57,4 +57,24 @@ h3 {
 .error-message {
   display: none;
   color: red;
+}
+
+.or-text {
+  font-size: 1.4em;
+  font-style: italic;
+  margin-top: 20px;
+}
+
+.login-text {
+  color: #FFFEAD;
+  font-size: 1.2em;
+}
+
+.dark-text {
+  color: #FFFEAD;
+  font-size: 1.2em;
+}
+
+#welcome {
+  margin-top: 15px;
 }

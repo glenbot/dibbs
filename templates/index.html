@@ -7,12 +7,12 @@
             <h4>Dibbs for war week of {{ monday }}</h4>
         </div>
 
-        <div class="row">
-        <p>Welcome, {{ g.user.name }} - <a href="{{ url_for('logout') }}">Logout</a></p>
+        <div class="row" id="welcome">
+        <p class="dark-text">Welcome {% if g.user.coc_handle %}{{ g.user.coc_handle }}{% endif %} - <a href="{{ url_for('logout') }}">Logout</a></p>
         </div>
         {% if not g.user.coc_handle %}
             <div class="row" id="coc-handle-row">
-                <p>We need to know who you are! Please set your CoC handle:</p>
+                <p class="dark-text">We need to know who you are! Please set your CoC handle:</p>
                 <div class="error-message">&nbsp;</div>
                 <form role="form" id="coc-handle-form">
                   <div class="form-group">
@@ -154,8 +154,8 @@
         }
     });
 
-    $('a.dibb').click(dibb);
-    $('a.undibb').click(undibb);
+    $(document).on('click', 'a.dibb', dibb);
+    $(document).on('click', 'a.undibb', undibb);
 
 </script>
 {% endblock %}

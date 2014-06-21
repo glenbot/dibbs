@@ -19,9 +19,23 @@ from utils import login_required
 from models import User, WarBase, Dibb
 from utils import get_dictionary_from_model
 
+__all__ = [
+    'app',
+    'index',
+    'set_handle',
+    'dibb_base',
+    'dibb_for',
+    'undibb_base',
+    'sign_up',
+    'login',
+    'login_standard',
+    'facebook_authorized',
+    'login_facebook',
+    'logout'
+]
+
 # init oauth
 oauth = OAuth()
-
 
 # start facebook
 facebook = oauth.remote_app(

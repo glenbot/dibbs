@@ -65,7 +65,7 @@ def index():
     ctx.update({
         'monday': (today - datetime.timedelta(days=today.weekday())).strftime("%B %d"),
         'war_bases': WarBase.select(),
-        'users': list(User.select().order_by(User.coc_handle.asc()))
+        'users': list(User.select().where(User.coc_handle != None).order_by(User.coc_handle.asc()))
     })
 
     return render_template('index.html', **ctx)

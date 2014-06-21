@@ -181,7 +181,6 @@ def dibb_for():
         'dibb': get_dictionary_from_model(dibb)
     }
 
-    print 'DIBB', dibb
     if dibb is None:
         if user:
             dibb = Dibb.create(user=user, warbase=warbase)

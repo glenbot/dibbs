@@ -6,7 +6,8 @@ from peewee import (
     IntegerField,
     TextField,
     ForeignKeyField,
-    BigIntegerField
+    BigIntegerField,
+    BooleanField,
 )
 
 from app import db
@@ -18,9 +19,10 @@ class User(db.Model):
     username = CharField(max_length=75, null=True)
     password = CharField(max_length=64, null=True)
     coc_handle = CharField(max_length=75, null=True)
+    admin = BooleanField(default=False)
 
     def __unicode__(self):
-        return '%s (%s)' % (self.name, self.fb_id,)
+        return '%s' % (self.coc_handle,)
 
 
 class WarBase(db.Model):
@@ -30,3 +32,4 @@ class WarBase(db.Model):
 class Dibb(db.Model):
     user = ForeignKeyField(User)
     warbase = ForeignKeyField(WarBase, related_name='dibbs')
+    static_user = CharField(max_length=75, null=True)

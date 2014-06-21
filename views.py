@@ -17,6 +17,7 @@ from pbkdf2 import crypt
 from app import app
 from utils import login_required
 from models import User, WarBase, Dibb
+from utils import get_dictionary_from_model
 
 # init oauth
 oauth = OAuth()
@@ -39,7 +40,7 @@ facebook = oauth.remote_app(
 def context():
     return {
         'APP_NAME': app.config['APP_NAME'],
-        'APP_TAGLINE': app.config['APP_TAGLINE']
+        'APP_TAGLINE': app.config['APP_TAGLINE'],
     }
 
 
@@ -63,7 +64,8 @@ def index():
 
     ctx.update({
         'monday': (today - datetime.timedelta(days=today.weekday())).strftime("%B %d"),
-        'war_bases': WarBase.select()
+        'war_bases': WarBase.select(),
+        'users': list(User.select().order_by(User.coc_handle.asc()))
     })
 
     return render_template('index.html', **ctx)
@@ -97,22 +99,21 @@ def set_handle():
 @app.route('/dibb-base', methods=['POST'])
 @login_required
 def dibb_base():
-    _id = request.form.get('id', None)
+    base_id = request.form.get('base_id', 0)
 
-    if not _id:
+    if not base_id:
         resp = jsonify({'result': 'An id was not given'})
         resp.status_code = 400
         return resp
 
     try:
-        user = User.select().where(User.id == session['uid']).get()
-        warbase = WarBase.select().where(WarBase.id == _id).get()
-        dibbs = Dibb.select().where(Dibb.user == user)
+        warbase = WarBase.select().where(WarBase.id == base_id).get()
+        dibbs = Dibb.select().where(Dibb.user == g.user)
     except (User.DoesNotExist, WarBase.DoesNotExist):
         abort(500)
 
     if warbase.dibbs.select().count() > 0:
-        resp = jsonify({'result': 'Already claimed'})
+        resp = jsonify({'result': 'Already dibbed'})
         resp.status_code = 400
         return resp
 
@@ -121,32 +122,139 @@ def dibb_base():
         resp.status_code = 400
         return resp
 
-    dibb = Dibb.create(user=user, warbase=warbase)
+    dibb = Dibb.create(user=g.user, warbase=warbase)
     dibb.save()
 
-    return jsonify({'handle': user.coc_handle})
+    return jsonify({
+        'warbase': get_dictionary_from_model(warbase),
+        'dibb': get_dictionary_from_model(dibb),
+        'user': get_dictionary_from_model(g.user, exclude={User: 'password'})
+    })
+
+
+@app.route('/dibb-for', methods=['POST'])
+@login_required
+def dibb_for():
+    user_id = request.form.get('user_id', 0)
+    base_id = request.form.get('base_id', 0)
+    dibb_id = request.form.get('dibb_id', 0)
+    static_user = request.form.get('static_user', None)
+
+    if not base_id:
+        resp = jsonify({'result': 'A base id was not given'})
+        resp.status_code = 400
+        return resp
+
+    if not g.user.admin:
+        resp = jsonify({'result': 'Not allowed to dibb for others'})
+        resp.status_code = 400
+        return resp
+
+    if not static_user:
+        static_user = None
+
+    try:
+        warbase = WarBase.select().where(WarBase.id == base_id).get()
+    except WarBase.DoesNotExist:
+        abort(500)
+
+    user = None
+    try:
+        user = User.select().where(User.id == user_id).get()
+    except User.DoesNotExist:
+        pass
+    except ValueError:  # users passed incorrectly
+        pass
+
+    dibb = None
+    try:
+        dibb = Dibb.select().where(Dibb.id == dibb_id).get()
+    except Dibb.DoesNotExist:
+        pass
+    except ValueError:  # users passed incorrectly
+        pass
+
+    # setup a default return json
+    return_json = {
+        'warbase': get_dictionary_from_model(warbase),
+        'user': get_dictionary_from_model(user, exclude={User: ['password']}),
+        'dibb': get_dictionary_from_model(dibb)
+    }
+
+    print 'DIBB', dibb
+    if dibb is None:
+        if user:
+            dibb = Dibb.create(user=user, warbase=warbase)
+            dibb.save()
+            return_json.update({
+                'dibb': get_dictionary_from_model(dibb)
+            })
+            return jsonify(return_json)
+
+        if static_user:
+            dibb = Dibb.create(user=g.user, warbase=warbase)
+            dibb.static_user = static_user
+            dibb.save()
+            return_json.update({
+                'user': get_dictionary_from_model(g.user, exclude={User: ['password']}),
+                'dibb': get_dictionary_from_model(dibb)
+            })
+            return jsonify(return_json)
+    else:
+        if user:
+            dibb.user = user
+            dibb.save()
+            return_json.update({
+                'dibb': get_dictionary_from_model(dibb)
+            })
+            return jsonify(return_json)
+
+        if static_user:
+            dibb.user = g.user
+            dibb.static_user = static_user
+            dibb.save()
+            return_json.update({
+                'user': get_dictionary_from_model(g.user, exclude={User: ['password']}),
+                'dibb': get_dictionary_from_model(dibb)
+            })
+            return jsonify(return_json)
+
+    return jsonify(return_json)
 
 
 @app.route('/undibb-base', methods=['POST'])
 @login_required
 def undibb_base():
-    _id = request.form.get('id', None)
+    base_id = request.form.get('base_id', 0)
 
-    if not _id:
+    if not base_id:
         resp = jsonify({'result': 'An id was not given'})
         resp.status_code = 400
         return resp
 
+    dibb = None
     try:
-        user = User.select().where(User.id == session['uid']).get()
-        warbase = WarBase.select().where(WarBase.id == _id).get()
-        dibb = Dibb.select().where(Dibb.user == user, Dibb.warbase == warbase).get()
-    except (User.DoesNotExist, WarBase.DoesNotExist, Dibb.DoesNotExist):
+        warbase = WarBase.select().where(WarBase.id == base_id).get()
+        dibb = Dibb.select().where(Dibb.warbase == warbase).get()
+    except WarBase.DoesNotExist:
         abort(500)
+    except Dibb.DoesNotExist:
+        resp = jsonify({'result': 'Base has not been dibbed yet'})
+        resp.status_code = 400
+        return resp
 
-    dibb.delete_instance()
+    if g.user.admin or g.user == dibb.user:
+        dibb.delete_instance()
+    else:
+        resp = jsonify({'result': 'Not allowed to undibb base'})
+        resp.status_code = 400
+        return resp
 
-    return jsonify({'handle': 'Available'})
+    return jsonify({
+        'warbase': get_dictionary_from_model(warbase),
+        'dibb': get_dictionary_from_model(None),
+        'user': get_dictionary_from_model(None)
+    })
 
 
 @app.route('/sign-up', methods=['GET', 'POST'])

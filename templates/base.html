@@ -27,6 +27,37 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <div id="dibbfor-modal" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Dibb for</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form" id="dibbfor-form">
+              {% if users %}
+                <select id="chosen-users" name="dibbfor_user">
+                  <option value="none" selected>Choose a registered user</option>
+                {% for user in users %}
+                  <option value="{{ user.id }}">{{ user.coc_handle }}</option>
+                {% endfor %}
+                </select>
+              {% endif %}
+              <p>&nbsp;</p>
+              <p>- OR -</p>
+              <p><input type="text" name="dibbfor_static_user" value="" placeHolder="Enter coc handle" /></p>
+              <input type="hidden" name="dibbfor_base_id" value="none" />
+              <input type="hidden" name="dibbfor_dibb_id" value="none" />
+            <form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="dibbfor-save"class="btn btn-default" data-dismiss="modal">Save</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 </body>
 <script type="text/javascript" src="{{ url_for('static', filename='jquery/jquery-2.1.1.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>

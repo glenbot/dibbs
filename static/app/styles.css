@@ -42,6 +42,10 @@ h3 {
   display: none;
 }
 
+div.modal {
+  color: black;
+}
+
 #error-modal div.modal-body {
   color: red;
 }

@@ -131,8 +131,8 @@ def dibb_base():
         resp.status_code = 400
         return resp
 
-    if dibbs.count() >= 2:
-        resp = jsonify({'result': 'You can only dibb up to two bases. Either undibb or keep your current dibbs'})
+    if dibbs.count() >= 1:
+        resp = jsonify({'result': 'You can only dibb one base. Undibb or keep your current dibb.'})
         resp.status_code = 400
         return resp
 

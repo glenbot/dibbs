@@ -14,10 +14,10 @@
         {% if g.user %}
           {% include "_nav.html" %}
         {% endif %}
-        <div class="row">
-          {% include "_messages.html" %}
-        </div>
         <div id="main-content">
+          <div class="row">
+            {% include "_messages.html" %}
+          </div>
           {% block content %}{% endblock %}
         </div>
     </div>

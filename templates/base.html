@@ -11,10 +11,15 @@
 
 <body>
     <div class="container-fluid">
+        {% if g.user %}
+          {% include "_nav.html" %}
+        {% endif %}
         <div class="row">
           {% include "_messages.html" %}
         </div>
-        {% block content %}{% endblock %}
+        <div id="main-content">
+          {% block content %}{% endblock %}
+        </div>
     </div>
 
     <div id="error-modal" class="modal fade">

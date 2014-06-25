@@ -404,3 +404,9 @@ def facebook_authorized(resp):
 @facebook.tokengetter
 def get_facebook_oauth_token():
     return session.get('oauth_token')
+
+
+@app.route('/war-strategy')
+def war_strategy():
+    ctx = {}
+    return render_template('war-strategy.html', **ctx)

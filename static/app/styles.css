@@ -9,24 +9,82 @@
 }
 
 body {
-    background-color: #191919;
-    color: #FFF;
-    font-family: "Ubuntu", sans-serif;
-    padding: 30px;
+  background-color: #191919;
+  color: #FFF;
+  font-family: "Ubuntu", sans-serif;
+  padding: 30px;
 }
 
 h1 {
-    font-family: 'Supercell';
-    color: #FFF;
+  font-family: 'Supercell';
+  color: #FFF;
 }
 
 h3 {
-    font-family: 'CCBackBeat';
-    color: #FFFEAD;
+  font-family: 'CCBackBeat';
+  color: #FFFEAD;
+}
+
+.navbar-default {
+  background-color: #191919;
+  border: 1px solid #000;
+  box-shadow: inset 1px 0 0 #272727;
+}
+
+.navbar-default .navbar-brand {
+  color: #FFF;
+}
+
+.navbar-default .navbar-nav > li > a {
+  color: #FFFEAD;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+  background-color: #202020;
+  color: #FFFEAD;
+}
+
+.navbar-default .navbar-nav > .active > a {
+  background-color: #202020;
+  color: #FFFEAD;
+}
+
+.navbar-default .navbar-nav > .active > a:hover {
+  background-color: #202020;
+  color: #FFFEAD;
+}
+
+.navbar-default .navbar-nav > .active > a:focus {
+  background-color: #202020;
+  color: #FFFEAD;
+}
+
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+  background-color: #202020;
+  color: #FFFEAD;
+}
+
+.dropdown-menu {
+  background-color: #191919;
+  border: 1px solid #777;
+}
+
+.dropdown-menu > li > a {
+  background-color: #191919;
+  color: #FFF;
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+  background-color: #202020;
+  color: #FFF;
+}
+
+#main-content {
+  margin-top: 30px;
 }
 
 #login-button {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 #war-bases {

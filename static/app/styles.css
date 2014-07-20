@@ -137,6 +137,11 @@ div.modal {
   font-size: 1.2em;
 }
 
+div.grey-text {
+  color: #CCC;
+  font-size: 1.2em;
+}
+
 #welcome {
   margin-top: 15px;
 }

@@ -409,4 +409,16 @@ def get_facebook_oauth_token():
 @app.route('/war-strategy')
 def war_strategy():
     ctx = {}
-    return render_template('war-strategy.html', **ctx)
+    return render_template('war_strategy.html', **ctx)
+
+
+@app.route('/war')
+def war():
+    ctx = {}
+    return render_template('war.html', **ctx)
+
+
+@app.route('/clan-expectations')
+def clan_expectations():
+    ctx = {}
+    return render_template('clan_expectations.html', **ctx)

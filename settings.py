@@ -11,7 +11,7 @@ DATABASE = {
 }
 
 # Application specific config
-APP_NAME = "Cult 2.0 dibbs"
+APP_NAME = "Cult Kingdoms dibbs"
 APP_TAGLINE = "Call dibbs on war bases"
 
 # Facebook settings
